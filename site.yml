@@ -1,0 +1,25 @@
+---
+- name: Configure Web Server
+  hosts: webservers
+  become: yes               # Use privilege escalation if required
+  gather_facts: yes         # Automatically collect system facts
+
+  tasks:
+    - name: Install Apache web server
+      yum:
+        name: httpd
+        state: present
+
+    - name: Start and enable Apache service
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: Copy custom index file (optional)
+      copy:
+        src: files/index.html
+        dest: /var/www/html/index.html
+        owner: apache
+        group: apache
+        mode: '0644'
